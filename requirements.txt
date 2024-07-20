@@ -493,6 +493,7 @@ websocket-client @ file:///Users/cbousseau/work/recipes/ci_py311/websocket-clien
 websockets==11.0.3
 Werkzeug @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_fc9kcczuwd/croot/werkzeug_1679489745296/work
 whatthepatch @ file:///Users/cbousseau/work/recipes/ci_py311/whatthepatch_1677934976505/work
+whitenoise==6.7.0
 widgetsnbextension @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_f9v6fxmzlg/croot/widgetsnbextension_1701273650279/work
 wrapt @ file:///Users/cbousseau/work/recipes/ci_py311/wrapt_1677925966862/work
 wurlitzer @ file:///Users/cbousseau/work/recipes/ci_py311/wurlitzer_1677955854875/work
