@@ -62,7 +62,7 @@ ci-info==0.3.0
 click @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_61srkg7e2e/croot/click_1698129815327/work
 cloudpathlib==0.16.0
 cloudpickle @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_da31odypvn/croot/cloudpickle_1683040013858/work
-clyent==1.2.2
+clyent==1.2.1
 colorama @ file:///Users/cbousseau/work/recipes/ci_py311/colorama_1677925183444/work
 colorcet @ file:///Users/cbousseau/work/recipes/ci_py311/colorcet_1677936559489/work
 comm @ file:///Users/cbousseau/work/recipes/ci_py311/comm_1677919149446/work
