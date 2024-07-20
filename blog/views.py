@@ -1,30 +1,29 @@
+# blog/views.py
 from rest_framework import generics
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import TokenAuthentication
-
 
 class PostListCreate(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
-
 
 class PostRetrieveUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
-
 
 class CommentListCreate(generics.ListCreateAPIView):
-    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
 
     def get_queryset(self):
-        return Comment.objects.filter(post_id=self.kwargs['post_pk'])
+        post_pk = self.kwargs['post_pk']
+        return Comment.objects.filter(post_id=post_pk)
 
+    def perform_create(self, serializer):
+        post_pk = self.kwargs['post_pk']
+        post = Post.objects.get(pk=post_pk)
+        serializer.save(post=post)
+
+from django.http import HttpResponse
+
+def home(request):
+    return HttpResponse("Welcome to the Blog API!")
