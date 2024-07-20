@@ -5,15 +5,23 @@
     <style>
         .container {
             display: flex;
-            justify-content: space-between;
         }
         .content {
             width: 70%;
+            padding: 20px;
         }
         .sidebar {
             width: 25%;
             border-left: 1px solid #ddd;
-            padding-left: 20px;
+            padding: 20px;
+        }
+        .login-section {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .login-section button {
+            margin: 5px;
         }
         form {
             display: flex;
@@ -26,68 +34,11 @@
             display: none;
         }
     </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            document.getElementById('loginButton').addEventListener('click', function () {
-                window.location.href = '/login/';
-            });
-
-            document.getElementById('signupButton').addEventListener('click', function () {
-                window.location.href = '/signup/';
-            });
-
-            if (localStorage.getItem('token')) {
-                fetchPosts();
-                document.getElementById('loginSection').classList.add('hidden');
-                document.getElementById('postSection').classList.remove('hidden');
-            } else {
-                document.getElementById('loginSection').classList.remove('hidden');
-                document.getElementById('postSection').classList.add('hidden');
-            }
-        });
-
-        function fetchPosts() {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                return;
-            }
-
-            fetch('/api/posts/', {
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                const postsList = document.getElementById('postsList');
-                postsList.innerHTML = '';
-                if (data.length) {
-                    data.forEach(post => {
-                        const postItem = document.createElement('li');
-                        postItem.innerHTML = `
-                            <h2>${post.title}</h2>
-                            <p>${post.content}</p>
-                            <p><small>${post.published_date}</small></p>
-                        `;
-                        postsList.appendChild(postItem);
-                    });
-                } else {
-                    postsList.innerHTML = '<p>No posts available.</p>';
-                }
-            });
-        }
-    </script>
 </head>
 <body>
 <div class="container">
     <div class="content">
         <h1>Welcome to the Blog Home Page</h1>
-
-        <div id="loginSection">
-            <h2>Login or Sign Up</h2>
-            <button id="loginButton">Login</button>
-            <button id="signupButton">Sign Up</button>
-        </div>
 
         <div id="postSection" class="hidden">
             <h2>Create a New Post</h2>
@@ -108,6 +59,121 @@
     <div class="sidebar">
         <!-- Sidebar content can be added here if needed -->
     </div>
+    <div id="loginSection" class="login-section">
+        <h2>Login or Sign Up</h2>
+        <button id="loginButton">Login</button>
+        <button id="signupButton">Sign Up</button>
+    </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('loginButton').addEventListener('click', function () {
+            window.location.href = '/login/';
+        });
+
+        document.getElementById('signupButton').addEventListener('click', function () {
+            window.location.href = '/signup/';
+        });
+
+        const token = localStorage.getItem('token');
+        if (token) {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('postSection').classList.remove('hidden');
+            fetchPosts();
+        } else {
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('postSection').classList.add('hidden');
+        }
+
+        document.getElementById('postForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            createPost();
+        });
+    });
+
+    function loginUser() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        fetch('/api/token/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.access) {
+                localStorage.setItem('token', data.access);
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('postSection').classList.remove('hidden');
+                fetchPosts();
+            } else {
+                alert('Login failed');
+            }
+        });
+    }
+
+    function fetchPosts() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            return;
+        }
+
+        fetch('/api/posts/', {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const postsList = document.getElementById('postsList');
+            postsList.innerHTML = '';
+            if (data.length) {
+                data.forEach(post => {
+                    const postItem = document.createElement('li');
+                    postItem.innerHTML = `
+                        <h2>${post.title}</h2>
+                        <p>${post.content}</p>
+                        <p><small>${post.published_date}</small></p>
+                    `;
+                    postsList.appendChild(postItem);
+                });
+            } else {
+                postsList.innerHTML = '<p>No posts available.</p>';
+            }
+        });
+    }
+
+    function createPost() {
+        const title = document.getElementById('title').value;
+        const content = document.getElementById('content').value;
+        const token = localStorage.getItem('token');
+
+        fetch('/api/posts/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({
+                title: title,
+                content: content,
+                author: 1  // Replace with actual user ID or handle dynamically
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('title').value = '';
+            document.getElementById('content').value = '';
+            fetchPosts();
+        });
+    }
+</script>
 </body>
 </html>

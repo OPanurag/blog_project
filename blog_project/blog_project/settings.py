@@ -10,14 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-6ub(j)q*cw(wp*sj9f52w6&je7!1q@&o1_5p#i3*n6&s_p&2x#"
@@ -25,12 +22,12 @@ SECRET_KEY = "django-insecure-6ub(j)q*cw(wp*sj9f52w6&je7!1q@&o1_5p#i3*n6&s_p&2x#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# Allowed hosts for the application
 ALLOWED_HOSTS = []
 
-
 # Application definition
-
 INSTALLED_APPS = [
+    # Django default apps
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -38,28 +35,29 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    'rest_framework',
-    'rest_framework.authtoken',
-    'rest_framework_simplejwt',
+    # Third-party packages
+    "rest_framework",
+    "rest_framework.authtoken",
+    "rest_framework_simplejwt",
+    "corsheaders",
 
-    'blog',
-    'corsheaders',
-
+    # Your custom apps
+    "blog_project",  # Replace with your app's name
 ]
 
+# REST framework settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
+        # JWT authentication class
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
+        # Default permission class
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
 }
 
-
-# Configure your database and other settings as needed
-
+# Middleware settings
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -68,17 +66,34 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # CORS middleware
 ]
 
+# URL configuration
 ROOT_URLCONF = "blog_project.urls"
 
+# JWT configuration
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),  # Access token lifetime
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),  # Refresh token lifetime
+    'ROTATE_REFRESH_TOKENS': False,  # Disable token rotation
+    'BLACKLIST_AFTER_ROTATION': True,  # Blacklist tokens after rotation
+    'UPDATE_LAST_LOGIN': False,  # Do not update last login
+    'ALGORITHM': 'HS256',  # Algorithm for encoding tokens
+    'SIGNING_KEY': SECRET_KEY,  # Key for signing tokens
+    'VERIFYING_KEY': None,  # Key for verifying tokens (if needed)
+    'AUTH_HEADER_TYPES': ('Bearer',),  # Expected auth header type
+    'USER_ID_FIELD': 'id',  # User ID field
+    'USER_ID_CLAIM': 'user_id',  # User ID claim in the token
+    'TOKEN_USER_CLASS': None,  # Custom user class (if needed)
+}
+
+# Template settings
 TEMPLATES = [
     {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
-        "APP_DIRS": True,
+        "BACKEND": "django.template.backends.django.DjangoTemplates",  # Template engine
+        "DIRS": [BASE_DIR / 'templates'],  # Global templates directory
+        "APP_DIRS": True,  # Enable app-specific template directories
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
@@ -90,23 +105,18 @@ TEMPLATES = [
     },
 ]
 
+# WSGI application
 WSGI_APPLICATION = "blog_project.wsgi.application"
 
-
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
+# Database configuration
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.sqlite3",  # Database engine
+        "NAME": BASE_DIR / "db.sqlite3",  # Database file
     }
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
-
+# Password validation settings
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -122,28 +132,26 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.0/topics/i18n/
-
+# Internationalization settings
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_TZ = True
 
+# CORS settings
 CORS_ALLOW_ALL_ORIGINS = True
 
-
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.0/howto/static-files/
-
 STATIC_URL = "static/"
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Custom user model
 AUTH_USER_MODEL = 'auth.User'
+
+# Custom authentication backends
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Default backend
+    'blog_project.authentication.CustomBackend',  # Your custom backend
+]
