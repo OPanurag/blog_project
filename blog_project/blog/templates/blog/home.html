@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Blog Home</title>
+    <title>Anurag's Blog Home Page</title>
     <style>
         .container {
             display: flex;
@@ -68,25 +68,31 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        document.getElementById('loginButton').addEventListener('click', function () {
+        const loginButton = document.getElementById('loginButton');
+        const signupButton = document.getElementById('signupButton');
+        const postSection = document.getElementById('postSection');
+        const loginSection = document.getElementById('loginSection');
+        const postForm = document.getElementById('postForm');
+
+        loginButton.addEventListener('click', function () {
             window.location.href = '/login/';
         });
 
-        document.getElementById('signupButton').addEventListener('click', function () {
+        signupButton.addEventListener('click', function () {
             window.location.href = '/signup/';
         });
 
         const token = localStorage.getItem('token');
         if (token) {
-            document.getElementById('loginSection').classList.add('hidden');
-            document.getElementById('postSection').classList.remove('hidden');
+            loginSection.classList.add('hidden');
+            postSection.classList.remove('hidden');
             fetchPosts();
         } else {
-            document.getElementById('loginSection').classList.remove('hidden');
-            document.getElementById('postSection').classList.add('hidden');
+            loginSection.classList.remove('hidden');
+            postSection.classList.add('hidden');
         }
 
-        document.getElementById('postForm').addEventListener('submit', function (event) {
+        postForm.addEventListener('submit', function (event) {
             event.preventDefault();
             createPost();
         });
@@ -163,8 +169,7 @@
             },
             body: JSON.stringify({
                 title: title,
-                content: content,
-                author: 1  // Replace with actual user ID or handle dynamically
+                content: content
             })
         })
         .then(response => response.json())

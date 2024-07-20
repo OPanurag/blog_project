@@ -2,11 +2,12 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from .models import Post, Comment
 
-
 class PostModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        user = User.objects.create(username='testuser', password='testpass')
+        user = User.objects.create(username='testuser')
+        user.set_password('testpass')
+        user.save()
         Post.objects.create(title='Test Post', content='Test Content', author=user)
 
     def test_title_content(self):
@@ -14,13 +15,14 @@ class PostModelTest(TestCase):
         expected_object_name = f'{post.title}'
         self.assertEqual(expected_object_name, 'Test Post')
 
-
 class CommentModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        user = User.objects.create(username='testuser', password='testpass')
+        user = User.objects.create(username='testuser')
+        user.set_password('testpass')
+        user.save()
         post = Post.objects.create(title='Test Post', content='Test Content', author=user)
-        Comment.objects.create(post=post, author='Test Author', text='Test Comment')
+        Comment.objects.create(post=post, author=user, text='Test Comment')
 
     def test_text_content(self):
         comment = Comment.objects.get(id=1)

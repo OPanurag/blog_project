@@ -27,22 +27,23 @@ ALLOWED_HOSTS = []
 
 # Application definition
 INSTALLED_APPS = [
-    # Django default apps
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
+    # Default Django apps
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.sites',
 
-    # Third-party packages
-    "rest_framework",
-    "rest_framework.authtoken",
-    "rest_framework_simplejwt",
-    "corsheaders",
+    # Third-party apps
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+    'corsheaders',
 
-    # Your custom apps
-    "blog_project",  # Replace with your app's name
+    # Your app
+    'blog',  # Ensure this is your app's name
 ]
 
 # REST framework settings
@@ -67,6 +68,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     'corsheaders.middleware.CorsMiddleware',  # CORS middleware
+
 ]
 
 # URL configuration
@@ -74,19 +76,36 @@ ROOT_URLCONF = "blog_project.urls"
 
 # JWT configuration
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),  # Access token lifetime
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),  # Refresh token lifetime
-    'ROTATE_REFRESH_TOKENS': False,  # Disable token rotation
-    'BLACKLIST_AFTER_ROTATION': True,  # Blacklist tokens after rotation
-    'UPDATE_LAST_LOGIN': False,  # Do not update last login
-    'ALGORITHM': 'HS256',  # Algorithm for encoding tokens
-    'SIGNING_KEY': SECRET_KEY,  # Key for signing tokens
-    'VERIFYING_KEY': None,  # Key for verifying tokens (if needed)
-    'AUTH_HEADER_TYPES': ('Bearer',),  # Expected auth header type
-    'USER_ID_FIELD': 'id',  # User ID field
-    'USER_ID_CLAIM': 'user_id',  # User ID claim in the token
-    'TOKEN_USER_CLASS': None,  # Custom user class (if needed)
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': False,
+
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+    'JSON_ENCODER': None,
+    'JWK_URL': None,
+    'LEEWAY': 0,
+
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    'JTI_CLAIM': 'jti',
+
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
+
 
 # Template settings
 TEMPLATES = [

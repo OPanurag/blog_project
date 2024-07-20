@@ -5,10 +5,16 @@
 </head>
 <body>
 <h1>Blog Posts</h1>
+{% if posts %}
 {% for post in posts %}
-<h2><a href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
-<p>{{ post.content|slice:":200" }}...</p>
-<p><small>{{ post.published_date }}</small></p>
+<article>
+    <h2><a href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+    <p>{{ post.content|slice:":200" }}...</p>
+    <p><small>{{ post.published_date }}</small></p>
+</article>
 {% endfor %}
+{% else %}
+<p>No posts available.</p>
+{% endif %}
 </body>
 </html>

@@ -15,21 +15,23 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-# blog_project/urls.py
 
-from blog.views import home
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
+from blog_project.blog.views import login_view, signup_view, post_list_view, post_detail, create_post, edit_post
+from blog_project.blog.views import PostListCreateView, CommentListCreateView, PostRetrieveUpdateDestroyView
 
 urlpatterns = [
-
     path('admin/', admin.site.urls),
-    path('api/', include('blog.urls')),
-
-    path('', home, name='home'),
-
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-
+    path('posts/', PostListCreateView.as_view(), name='post-list'),
+    path('login/', login_view, name='login'),
+    path('signup/', signup_view, name='signup'),
+    path('create_post/', create_post, name='create_post'),
+    path('posts/add/', create_post, name='create-post'),
+    path('posts/<int:pk>/edit/', edit_post, name='edit-post'),
+    path('posts/<int:pk>/', PostRetrieveUpdateDestroyView.as_view(), name='post-detail'),
+    path('posts/<int:post_pk>/comments/', CommentListCreateView.as_view(), name='comment-list-create'),
+    path('posts/', post_list_view, name='post-list'),
+    path('posts/<int:pk>/', post_detail, name='post-detail'),
 ]

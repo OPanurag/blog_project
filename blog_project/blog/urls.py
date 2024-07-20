@@ -1,23 +1,38 @@
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.urls import path
-from . import views
-from .views import PostListCreateView, PostRetrieveUpdateDestroyView, CommentListCreateView, home, post_detail
+from .views import (
+    login_view,
+    signup_view,
+    create_post,
+    edit_post,  # Make sure to add this view in your views.py
+    post_list_view,
+    post_detail,
+    add_comment,  # Make sure to add this view in your views.py
+    PostListCreateView,
+    PostRetrieveUpdateDestroyView,
+    CommentListCreateView
+)
 
 urlpatterns = [
-    path('posts/', PostListCreateView.as_view(), name='post-list-create'),
-    path('posts/<int:post_pk>/comments/', CommentListCreateView.as_view(), name='comment-list-create'),
-    path('post/<int:pk>/', post_detail, name='post-detail'),
-    path('post/<int:pk>/', views.post_detail, name='post_detail'),
+    path('posts/', PostListCreateView.as_view(), name='post-list'),
+    path('login/', login_view, name='login'),
+    path('signup/', signup_view, name='signup'),
+
+    # Combined post creation path
+    path('posts/add/', create_post, name='create-post'),
+
+    # Post edit view
+    path('posts/<int:pk>/edit/', edit_post, name='edit-post'),
+
+    # Post detail view
     path('posts/<int:pk>/', PostRetrieveUpdateDestroyView.as_view(), name='post-detail'),
 
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/posts/', views.PostListCreateView.as_view(), name='api_post_list_create'),
-    path('api/posts/<int:pk>/', views.PostRetrieveUpdateDestroyView.as_view(), name='api_post_detail'),
-    path('api/posts/<int:post_pk>/comments/', views.CommentListCreateView.as_view(), name='api_comment_list_create'),
-    path('api/login/', views.login, name='api_login'),
+    # Comment-related views
+    path('posts/<int:post_pk>/comments/', CommentListCreateView.as_view(), name='comment-list-create'),
+    path('posts/<int:post_id>/add-comment/', add_comment, name='add-comment'),  # URL for adding a new comment
 
-    path('', views.home, name='home'),
-    path('create/', views.create_post, name='create_post'),
-    path('login/', views.login_view, name='login'),
-    path('signup/', views.signup_view, name='signup'),
+    # Post list view (for the HTML view)
+    path('posts/html/', post_list_view, name='post-list-html'),
+
+    # Post detail view (for the HTML view)
+    path('posts/<int:pk>/html/', post_detail, name='post-detail-html'),
 ]
