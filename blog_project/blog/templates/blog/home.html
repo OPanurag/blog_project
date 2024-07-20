@@ -3,10 +3,75 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Home</title>
+    <title>Blog Home</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetchPosts();
+
+            document.getElementById('postForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                createPost();
+            });
+        });
+
+        function fetchPosts() {
+            fetch('/api/posts/')
+                .then(response => response.json())
+                .then(data => {
+                    const postsList = document.getElementById('postsList');
+                    postsList.innerHTML = '';
+                    data.forEach(post => {
+                        const postItem = document.createElement('li');
+                        postItem.innerHTML = `
+                            <h2>${post.title}</h2>
+                            <p>${post.content}</p>
+                            <p><small>${post.published_date}</small></p>
+                        `;
+                        postsList.appendChild(postItem);
+                    });
+                });
+        }
+
+        function createPost() {
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+
+            fetch('/api/posts/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token') // Assuming the token is stored in localStorage
+                },
+                body: JSON.stringify({
+                    title: title,
+                    content: content,
+                    author: 1  // Replace with actual user ID or handle dynamically
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('title').value = '';
+                document.getElementById('content').value = '';
+                fetchPosts();
+            });
+        }
+    </script>
 </head>
 <body>
 <h1>Welcome to the Blog Home Page</h1>
-<a href="{% url 'post-list-create' %}">View Posts</a>
+
+<h2>Create a New Post</h2>
+<form id="postForm">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" required><br>
+    <label for="content">Content:</label>
+    <textarea id="content" name="content" required></textarea><br>
+    <button type="submit">Create Post</button>
+</form>
+
+<h2>Blog Posts</h2>
+<ul id="postsList">
+    <!-- Posts will be populated here by JavaScript -->
+</ul>
 </body>
 </html>
