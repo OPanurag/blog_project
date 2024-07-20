@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ post.title }}</title>
+</head>
+<body>
+<h1>{{ post.title }}</h1>
+<p>{{ post.content }}</p>
+<p><small>{{ post.published_date }}</small></p>
+
+<h2>Comments</h2>
+{% for comment in post.comments.all %}
+<p>{{ comment.text }}</p>
+<p><small>{{ comment.created_date }}</small></p>
+{% endfor %}
+
+<h2>Add a Comment</h2>
+<form method="post">
+    {% csrf_token %}
+    <textarea name="text" rows="5" cols="40"></textarea><br>
+    <input type="submit" value="Add Comment">
+</form>
+</body>
+</html>

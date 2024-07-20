@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Comment</title>
+</head>
+<body>
+<h1>Add Comment</h1>
+<form method="post">
+    {% csrf_token %}
+    <label for="text">Comment:</label>
+    <textarea name="text" id="text" rows="5" cols="40"></textarea><br><br>
+    <input type="submit" value="Add Comment">
+</form>
+</body>
+</html>

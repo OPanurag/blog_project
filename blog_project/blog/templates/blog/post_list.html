@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blog Posts</title>
+</head>
+<body>
+<h1>Blog Posts</h1>
+{% for post in posts %}
+<h2><a href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+<p>{{ post.content|slice:":200" }}...</p>
+<p><small>{{ post.published_date }}</small></p>
+{% endfor %}
+</body>
+</html>
