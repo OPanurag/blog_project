@@ -1,0 +1,28 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Blog{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+<header>
+    <h1>Welcome to My Blog</h1>
+    <nav>
+        <ul>
+            <li><a href="{% url 'post-list-create' %}">Posts</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+    {% block content %}
+    <!-- Content will be inserted here -->
+    {% endblock %}
+</main>
+<footer>
+    <p>&copy; 2024 My Blog</p>
+</footer>
+</body>
+</html>
