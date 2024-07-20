@@ -84,7 +84,7 @@ WSGI_APPLICATION = "blog_project.wsgi.application"
 # Database
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL', 'sqlite:///' + str(BASE_DIR / "db.sqlite3"))
+        default=os.environ.get('DATABASE_URL')
     )
 }
 
