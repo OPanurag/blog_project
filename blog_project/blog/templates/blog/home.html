@@ -1,35 +1,70 @@
 <!-- blog/templates/blog/home.html -->
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>Blog Home</title>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            fetchPosts();
+            document.getElementById('loginForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                loginUser();
+            });
 
             document.getElementById('postForm').addEventListener('submit', function (event) {
                 event.preventDefault();
                 createPost();
             });
+
+            if (localStorage.getItem('token')) {
+                fetchPosts();
+            }
         });
 
+        function loginUser() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            fetch('/api/token/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.access) {
+                    localStorage.setItem('token', data.access);
+                    fetchPosts();
+                } else {
+                    alert('Login failed');
+                }
+            });
+        }
+
         function fetchPosts() {
-            fetch('/api/posts/')
-                .then(response => response.json())
-                .then(data => {
-                    const postsList = document.getElementById('postsList');
-                    postsList.innerHTML = '';
-                    data.forEach(post => {
-                        const postItem = document.createElement('li');
-                        postItem.innerHTML = `
-                            <h2>${post.title}</h2>
-                            <p>${post.content}</p>
-                            <p><small>${post.published_date}</small></p>
-                        `;
-                        postsList.appendChild(postItem);
-                    });
+            fetch('/api/posts/', {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const postsList = document.getElementById('postsList');
+                postsList.innerHTML = '';
+                data.forEach(post => {
+                    const postItem = document.createElement('li');
+                    postItem.innerHTML = `
+                        <h2>${post.title}</h2>
+                        <p>${post.content}</p>
+                        <p><small>${post.published_date}</small></p>
+                    `;
+                    postsList.appendChild(postItem);
                 });
+            });
         }
 
         function createPost() {
@@ -40,7 +75,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('token') // Assuming the token is stored in localStorage
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
                 },
                 body: JSON.stringify({
                     title: title,
@@ -59,6 +94,15 @@
 </head>
 <body>
 <h1>Welcome to the Blog Home Page</h1>
+
+<h2>Login</h2>
+<form id="loginForm">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required><br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required><br>
+    <button type="submit">Login</button>
+</form>
 
 <h2>Create a New Post</h2>
 <form id="postForm">
