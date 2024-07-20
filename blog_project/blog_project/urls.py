@@ -16,22 +16,19 @@ Including another URLconf
 """
 
 
+from blog.views import PostListCreateView, CommentListCreateView, PostRetrieveUpdateDestroyView
 from django.contrib import admin
-from django.urls import path, include
-
-from blog_project.blog.views import login_view, signup_view, post_list_view, post_detail, create_post, edit_post
-from blog_project.blog.views import PostListCreateView, CommentListCreateView, PostRetrieveUpdateDestroyView
+from django.urls import path
+from blog.views import home, login_view, signup_view, post_list_view, post_detail, create_post, edit_post
 
 urlpatterns = [
+    path('', home, name='home'),  # Add this line to handle the root URL
     path('admin/', admin.site.urls),
-    path('posts/', PostListCreateView.as_view(), name='post-list'),
+    path('posts/', post_list_view, name='post-list'),
     path('login/', login_view, name='login'),
     path('signup/', signup_view, name='signup'),
     path('create_post/', create_post, name='create_post'),
-    path('posts/add/', create_post, name='create-post'),
-    path('posts/<int:pk>/edit/', edit_post, name='edit-post'),
-    path('posts/<int:pk>/', PostRetrieveUpdateDestroyView.as_view(), name='post-detail'),
-    path('posts/<int:post_pk>/comments/', CommentListCreateView.as_view(), name='comment-list-create'),
-    path('posts/', post_list_view, name='post-list'),
+    path('posts/add/', create_post, name='create-post'),  # URL for adding a new post
+    path('posts/<int:pk>/edit/', edit_post, name='edit-post'),  # URL for editing a post
     path('posts/<int:pk>/', post_detail, name='post-detail'),
 ]
