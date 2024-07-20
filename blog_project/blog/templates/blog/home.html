@@ -1,184 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Anurag's Blog Home Page</title>
-    <style>
-        .container {
-            display: flex;
-        }
-        .content {
-            width: 70%;
-            padding: 20px;
-        }
-        .sidebar {
-            width: 25%;
-            border-left: 1px solid #ddd;
-            padding: 20px;
-        }
-        .login-section {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-        }
-        .login-section button {
-            margin: 5px;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-        input, textarea {
-            margin-bottom: 10px;
-        }
-        .hidden {
-            display: none;
-        }
-    </style>
+    <title>Home</title>
 </head>
 <body>
-<div class="container">
-    <div class="content">
-        <h1>Welcome to the Blog Home Page</h1>
-
-        <div id="postSection" class="hidden">
-            <h2>Create a New Post</h2>
-            <form id="postForm">
-                <label for="title">Title:</label>
-                <input type="text" id="title" name="title" required><br>
-                <label for="content">Content:</label>
-                <textarea id="content" name="content" required></textarea><br>
-                <button type="submit">Create Post</button>
-            </form>
-
-            <h2>Blog Posts</h2>
-            <ul id="postsList">
-                <!-- Posts will be populated here by JavaScript -->
-            </ul>
+<div style="display: flex; justify-content: space-between;">
+    <div style="width: 70%;">
+        <h1>All Posts</h1>
+        {% for post in posts %}
+        <div>
+            <h2><a href="{% url 'post-detail' pk=post.pk %}">{{ post.title }}</a></h2>
+            <p>{{ post.content|slice:":100" }}...</p>
+            <p>By: {{ post.author.username }} on {{ post.published_date }}</p>
         </div>
+        {% endfor %}
     </div>
-    <div class="sidebar">
-        <!-- Sidebar content can be added here if needed -->
-    </div>
-    <div id="loginSection" class="login-section">
-        <h2>Login or Sign Up</h2>
-        <button id="loginButton">Login</button>
-        <button id="signupButton">Sign Up</button>
+    <div style="width: 30%;">
+        {% if user_logged_in %}
+        <p>Welcome, {{ request.user.username }}!</p>
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+        {% else %}
+        <a href="{% url 'login' %}">Login</a>
+        <br>
+        <a href="{% url 'signup' %}">Signup</a>
+        {% endif %}
     </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const loginButton = document.getElementById('loginButton');
-        const signupButton = document.getElementById('signupButton');
-        const postSection = document.getElementById('postSection');
-        const loginSection = document.getElementById('loginSection');
-        const postForm = document.getElementById('postForm');
-
-        loginButton.addEventListener('click', function () {
-            window.location.href = '/login/';
-        });
-
-        signupButton.addEventListener('click', function () {
-            window.location.href = '/signup/';
-        });
-
-        const token = localStorage.getItem('token');
-        if (token) {
-            loginSection.classList.add('hidden');
-            postSection.classList.remove('hidden');
-            fetchPosts();
-        } else {
-            loginSection.classList.remove('hidden');
-            postSection.classList.add('hidden');
-        }
-
-        postForm.addEventListener('submit', function (event) {
-            event.preventDefault();
-            createPost();
-        });
-    });
-
-    function loginUser() {
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-
-        fetch('/api/token/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username: username,
-                password: password
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.access) {
-                localStorage.setItem('token', data.access);
-                document.getElementById('loginSection').classList.add('hidden');
-                document.getElementById('postSection').classList.remove('hidden');
-                fetchPosts();
-            } else {
-                alert('Login failed');
-            }
-        });
-    }
-
-    function fetchPosts() {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            return;
-        }
-
-        fetch('/api/posts/', {
-            headers: {
-                'Authorization': 'Bearer ' + token
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            const postsList = document.getElementById('postsList');
-            postsList.innerHTML = '';
-            if (data.length) {
-                data.forEach(post => {
-                    const postItem = document.createElement('li');
-                    postItem.innerHTML = `
-                        <h2>${post.title}</h2>
-                        <p>${post.content}</p>
-                        <p><small>${post.published_date}</small></p>
-                    `;
-                    postsList.appendChild(postItem);
-                });
-            } else {
-                postsList.innerHTML = '<p>No posts available.</p>';
-            }
-        });
-    }
-
-    function createPost() {
-        const title = document.getElementById('title').value;
-        const content = document.getElementById('content').value;
-        const token = localStorage.getItem('token');
-
-        fetch('/api/posts/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
-            },
-            body: JSON.stringify({
-                title: title,
-                content: content
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('title').value = '';
-            document.getElementById('content').value = '';
-            fetchPosts();
-        });
-    }
-</script>
 </body>
 </html>

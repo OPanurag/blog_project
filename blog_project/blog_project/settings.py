@@ -174,3 +174,6 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  # Default backend
     'blog_project.authentication.CustomBackend',  # Your custom backend
 ]
+
+
+SITE_ID = 1
