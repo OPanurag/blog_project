@@ -16,7 +16,7 @@ Including another URLconf
 """
 
 
-from blog.views import PostListCreateView, CommentListCreateView, PostRetrieveUpdateDestroyView
+# from blog.views import PostListCreateView, CommentListCreateView, PostRetrieveUpdateDestroyView
 from django.contrib import admin
 from django.urls import path
 from blog.views import home, login_view, signup_view, post_list_view, post_detail, create_post, edit_post
