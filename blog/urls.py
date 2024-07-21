@@ -9,7 +9,7 @@ urlpatterns = [
     # Standard Django views
     path('', home, name='home'),
     path('login/', login_view, name='login'),
-    path('signup/', signup_view, name='signup'),
+    path('/signup/', signup_view, name='signup'),
     path('logout/', logout_view, name='logout'),
     path('create_post/', create_post, name='create-post'),
     path('posts/', post_list_view, name='post-list'),
