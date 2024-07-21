@@ -7,6 +7,16 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 
 import os
 from pathlib import Path
+from django.contrib.messages import constants as messages
+
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'debug',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',
+}
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

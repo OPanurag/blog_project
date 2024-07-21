@@ -33,19 +33,27 @@ class SignUpForm(forms.ModelForm):
 
 def signup_view(request):
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])
-            user.save()
-            login(request, user)
-            messages.success(request, "Registration successful.")
-            return redirect('home')
+        username = request.POST['username']
+        email = request.POST['email']
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        password = request.POST['password']
+        confirm_password = request.POST['confirm_password']
+
+        if password == confirm_password:
+            if User.objects.filter(username=username).exists():
+                messages.error(request, 'Username already exists.')
+            elif User.objects.filter(email=email).exists():
+                messages.error(request, 'Email already exists.')
+            else:
+                user = User.objects.create_user(username=username, email=email, password=password, first_name=first_name, last_name=last_name)
+                user.save()
+                login(request, user)
+                return redirect('home')
         else:
-            messages.error(request, "Unsuccessful registration. Invalid information.")
-    else:
-        form = SignUpForm()
-    return render(request, 'blog/signup.html', {'form': form})
+            messages.error(request, 'Passwords do not match.')
+
+    return render(request, 'blog/signup.html')
 
 
 def login_view(request):
