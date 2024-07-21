@@ -1,4 +1,3 @@
-# blog/urls.py
 from django.urls import path
 from .views import (
     home, login_view, signup_view, post_list_view, post_detail, create_post, edit_post, add_comment, logout_view
@@ -9,7 +8,7 @@ urlpatterns = [
     # Standard Django views
     path('', home, name='home'),
     path('login/', login_view, name='login'),
-    path('/signup/', signup_view, name='signup'),
+    path('signup/', signup_view, name='signup'),
     path('logout/', logout_view, name='logout'),
     path('create_post/', create_post, name='create-post'),
     path('posts/', post_list_view, name='post-list'),
