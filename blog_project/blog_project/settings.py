@@ -37,7 +37,6 @@ DEBUG = True
 # Allowed hosts for the application
 ALLOWED_HOSTS = ['blogproject-rrfr.onrender.com', '127.0.0.1', 'localhost']
 
-
 # Application definition
 INSTALLED_APPS = [
     # Default Django apps
