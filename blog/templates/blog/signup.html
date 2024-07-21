@@ -1,29 +1,21 @@
-{% extends 'base.html' %}
+{% extends 'blog/base.html' %}
 
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2>Sign Up</h2>
-    <form method="post" action="{% url 'signup' %}">
+<div class="user-details">
+    <h1>Sign Up</h1>
+    <form method="post">
         {% csrf_token %}
-        <div class="form-group">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="password1">Password:</label>
-            <input type="password" id="password1" name="password1" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="password2">Confirm Password:</label>
-            <input type="password" id="password2" name="password2" class="form-control" required>
-        </div>
-        <button type="submit" class="auth-button">Sign Up</button>
+        {{ form.non_field_errors }}
+        {{ form.username.label_tag }} {{ form.username }}<br>
+        {{ form.email.label_tag }} {{ form.email }}<br>
+        {{ form.first_name.label_tag }} {{ form.first_name }}<br>
+        {{ form.last_name.label_tag }} {{ form.last_name }}<br>
+        {{ form.password.label_tag }} {{ form.password }}<br>
+        {{ form.confirm_password.label_tag }} {{ form.confirm_password }}<br>
+        <button type="submit">Sign Up</button>
     </form>
+    <p>Already have an account? <a href="{% url 'login' %}" class="auth-button">Log In</a></p>
 </div>
 {% endblock %}
