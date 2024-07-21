@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from .models import Post, Comment
 
+
 class PostModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -24,6 +25,7 @@ class PostModelTest(TestCase):
         post = Post.objects.get(id=1)
         expected_url = f'/posts/{post.id}/'
         self.assertEqual(post.get_absolute_url(), expected_url)
+
 
 class CommentModelTest(TestCase):
     @classmethod
