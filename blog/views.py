@@ -6,12 +6,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
-from django.template import TemplateDoesNotExist
-from django.template.loader import get_template
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .forms import PostForm, SignUpForm
@@ -72,15 +68,6 @@ def login_view(request):
     return render(request, 'blog/login.html', {'form': form})
 
 
-# def home(request):
-#     try:
-#         template = get_template('blog/home.html')
-#     except TemplateDoesNotExist:
-#         return HttpResponse("Template blog/home.html does not exist")
-#
-#     posts = Post.objects.all()
-#     return render(request, 'blog/home.html', context={'posts': posts})
-
 def home(request):
     posts = Post.objects.all()
     return render(request, 'blog/home.html', {'posts': posts})
@@ -92,7 +79,7 @@ def create_post(request):
         form = PostForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
-            post.author = request.user  # Set the author field
+            post.author = request.user
             post.save()
             return redirect('home')
     else:
@@ -108,7 +95,7 @@ def add_comment(request, post_id):
         text = request.POST.get('text')
         if text:
             Comment.objects.create(post=post, author=request.user, text=text)
-        return redirect('home')
+        return redirect('post-detail', pk=post_id)
     return HttpResponse("Invalid request")
 
 

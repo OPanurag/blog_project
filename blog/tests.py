@@ -43,5 +43,5 @@ class CommentModelTest(TestCase):
 
     def test_string_representation(self):
         comment = Comment.objects.get(id=1)
-        expected_str = f'testuser - Test Comment'
+        expected_str = f'{comment.author.username} - {comment.text}'
         self.assertEqual(str(comment), expected_str)
