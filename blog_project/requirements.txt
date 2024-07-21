@@ -4,3 +4,4 @@ djangorestframework-simplejwt
 gunicorn
 djangorestframework-jwt==1.11.0
 PyJWT==1.7.1
+dj_database_url
