@@ -14,6 +14,15 @@ from datetime import timedelta
 from pathlib import Path
 import os
 
+
+import dj_database_url
+
+DATABASES = {
+    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+}
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -166,7 +175,9 @@ CORS_ALLOW_ALL_ORIGINS = True
 STATIC_URL = '/static/'
 
 # Directory where collect static will collect static files for deployment
-STATIC_ROOT = BASE_DIR / "staticfiles"
+# STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 
 # Default primary key field type
