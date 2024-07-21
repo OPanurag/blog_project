@@ -182,7 +182,7 @@ AUTH_USER_MODEL = 'auth.User'
 # Custom authentication backends
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  # Default backend
-    'blog_project.authentication.CustomBackend',  # Your custom backend
+    # 'blog_project.authentication.CustomBackend',  # Your custom backend
 ]
 
 

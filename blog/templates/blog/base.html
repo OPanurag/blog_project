@@ -167,6 +167,19 @@
         .auth-button:hover {
             background-color: #218838; /* Darker green on hover */
         }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .left-sidebar {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            .right-content {
+                flex: 1;
+            }
+        }
     </style>
 </head>
 <body>

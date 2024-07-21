@@ -5,7 +5,6 @@ from .views import (
 from .api.views import PostListCreateView, PostRetrieveUpdateDestroyView, CommentListCreateView, api_login
 
 urlpatterns = [
-    # Standard Django views
     path('', home, name='home'),
     path('login/', login_view, name='login'),
     path('signup/', signup_view, name='signup'),

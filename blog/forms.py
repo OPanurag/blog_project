@@ -3,7 +3,6 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Post, Comment
 
-
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(
         widget=forms.EmailInput(attrs={'placeholder': 'Email'}),
@@ -43,29 +42,12 @@ class SignUpForm(UserCreationForm):
             }
         }
 
-
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content']  # Exclude 'author' field
-
+        fields = ['title', 'content']
 
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['text']
-
-
-class CustomUserCreationForm(UserCreationForm):
-    password1 = forms.CharField(
-        widget=forms.PasswordInput(attrs={'placeholder': 'Password'}),
-        label='Password'
-    )
-    password2 = forms.CharField(
-        widget=forms.PasswordInput(attrs={'placeholder': 'Confirm Password'}),
-        label='Confirm Password'
-    )
-
-    class Meta:
-        model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2')

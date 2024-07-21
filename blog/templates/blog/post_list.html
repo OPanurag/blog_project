@@ -1,20 +1,23 @@
-<!-- post_list.html -->
-{% extends 'home.html' %}
+{% extends 'blog/base.html' %}
+
+{% block title %}Post List{% endblock %}
 
 {% block content %}
-<h1>Post List</h1>
-<ul>
-    {% for post in posts %}
-    <li>
-        <a href="{% url 'post-detail' post.pk %}">{{ post.title }}</a>
-        {% if user.is_authenticated %}
-        <form action="{% url 'add-comment' post.pk %}" method="post">
-            {% csrf_token %}
-            <input type="text" name="comment" placeholder="Add a comment">
-            <button type="submit">Submit</button>
-        </form>
-        {% endif %}
-    </li>
-    {% endfor %}
-</ul>
+<div class="container">
+    <h1>Post List</h1>
+    <ul class="post-list">
+        {% for post in posts %}
+        <li class="post-item">
+            <a href="{% url 'post-detail' post.pk %}" class="post-title">{{ post.title }}</a>
+            {% if user.is_authenticated %}
+            <form action="{% url 'add-comment' post.pk %}" method="post" class="comment-form">
+                {% csrf_token %}
+                <input type="text" name="text" placeholder="Add a comment" required>
+                <button type="submit" class="auth-button">Submit</button>
+            </form>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
 {% endblock %}

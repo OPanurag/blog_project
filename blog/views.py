@@ -14,19 +14,13 @@ from rest_framework.response import Response
 
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .forms import PostForm, CustomUserCreationForm
+from .forms import PostForm, SignUpForm
 from .models import Post, Comment
 
 
 class SignUpForm(forms.ModelForm):
-    password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'placeholder': 'Password'}),
-        label='Password'
-    )
-    confirm_password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'placeholder': 'Confirm Password'}),
-        label='Confirm Password'
-    )
+    password = forms.CharField(widget=forms.PasswordInput, label='Password')
+    confirm_password = forms.CharField(widget=forms.PasswordInput, label='Confirm Password')
 
     class Meta:
         model = User
@@ -36,7 +30,6 @@ class SignUpForm(forms.ModelForm):
         cleaned_data = super().clean()
         password = cleaned_data.get("password")
         confirm_password = cleaned_data.get("confirm_password")
-
         if password and confirm_password and password != confirm_password:
             raise forms.ValidationError("Passwords do not match.")
         return cleaned_data
@@ -79,14 +72,18 @@ def login_view(request):
     return render(request, 'blog/login.html', {'form': form})
 
 
-def home(request):
-    try:
-        template = get_template('blog/home.html')
-    except TemplateDoesNotExist:
-        return HttpResponse("Template blog/home.html does not exist")
+# def home(request):
+#     try:
+#         template = get_template('blog/home.html')
+#     except TemplateDoesNotExist:
+#         return HttpResponse("Template blog/home.html does not exist")
+#
+#     posts = Post.objects.all()
+#     return render(request, 'blog/home.html', context={'posts': posts})
 
+def home(request):
     posts = Post.objects.all()
-    return render(request, 'blog/home.html', context={'posts': posts})
+    return render(request, 'blog/home.html', {'posts': posts})
 
 
 @login_required
@@ -118,12 +115,7 @@ def add_comment(request, post_id):
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     comments = Comment.objects.filter(post=post).order_by('-created_at')
-
-    context = {
-        'post': post,
-        'comments': comments,
-    }
-    return render(request, 'blog/post_detail.html', context)
+    return render(request, 'blog/post_detail.html', {'post': post, 'comments': comments})
 
 
 @api_view(['POST'])
