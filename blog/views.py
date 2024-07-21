@@ -50,22 +50,28 @@ def signup_view(request):
 
 def login_view(request):
     if request.method == 'POST':
+        print("POST request received")  # Debugging line
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
+                print("User authenticated")  # Debugging line
                 login(request, user)
                 messages.info(request, f"You are now logged in as {username}.")
                 return redirect('home')  # Redirect to home after successful login
             else:
+                print("Invalid username or password")  # Debugging line
                 messages.error(request, "Invalid username or password.")
         else:
+            print("Form is not valid")  # Debugging line
             messages.error(request, "Invalid username or password.")
     else:
+        print("GET request received")  # Debugging line
         form = AuthenticationForm()
     return render(request, 'blog/login.html', {'form': form})
+
 
 
 def home(request):
