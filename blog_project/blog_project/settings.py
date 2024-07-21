@@ -80,7 +80,7 @@ MIDDLEWARE = [
 ]
 
 # URL configuration
-ROOT_URLCONF = "blog_project.urls"
+ROOT_URLCONF = "blog_project.blog_project.urls"
 
 # JWT configuration
 SIMPLE_JWT = {
@@ -134,7 +134,7 @@ TEMPLATES = [
 
 
 # WSGI application
-WSGI_APPLICATION = "blog_project.wsgi.application"
+WSGI_APPLICATION = "blog_project.blog_project.wsgi.application"
 
 # Database configuration
 DATABASES = {
