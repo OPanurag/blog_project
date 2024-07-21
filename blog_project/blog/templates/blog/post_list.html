@@ -1,20 +1,20 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Blog Posts</title>
-</head>
-<body>
-<h1>Blog Posts</h1>
-{% if posts %}
-{% for post in posts %}
-<article>
-    <h2><a href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
-    <p>{{ post.content|slice:":200" }}...</p>
-    <p><small>{{ post.published_date }}</small></p>
-</article>
-{% endfor %}
-{% else %}
-<p>No posts available.</p>
-{% endif %}
-</body>
-</html>
+<!-- post_list.html -->
+{% extends 'home.html' %}
+
+{% block content %}
+<h1>Post List</h1>
+<ul>
+    {% for post in posts %}
+    <li>
+        <a href="{% url 'post-detail' post.pk %}">{{ post.title }}</a>
+        {% if user.is_authenticated %}
+        <form action="{% url 'add-comment' post.pk %}" method="post">
+            {% csrf_token %}
+            <input type="text" name="comment" placeholder="Add a comment">
+            <button type="submit">Submit</button>
+        </form>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -1,33 +1,51 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Home</title>
-</head>
-<body>
-<div style="display: flex; justify-content: space-between;">
-    <div style="width: 70%;">
+{% extends 'blog/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="left-sidebar">
+        {% if user.is_authenticated %}
+        <div class="create-post">
+            <a href="{% url 'create-post' %}">Create Post</a>
+        </div>
+        <div class="user-details">
+            <h3>Welcome, {{ user.first_name }} {{ user.last_name }}</h3>
+            <a href="{% url 'logout' %}" class="logout-button">Logout</a>
+        </div>
+        {% else %}
+        <div class="login-signup">
+            <a href="{% url 'login' %}" class="auth-button">Login</a>
+            <a href="{% url 'signup' %}" class="auth-button">Signup</a>
+        </div>
+        {% endif %}
+    </div>
+    <div class="right-content">
         <h1>All Posts</h1>
         {% for post in posts %}
-        <div>
-            <h2><a href="{% url 'post-detail' pk=post.pk %}">{{ post.title }}</a></h2>
-            <p>{{ post.content|slice:":100" }}...</p>
-            <p>By: {{ post.author.username }} on {{ post.published_date }}</p>
+        <div class="post">
+            <h2>{{ post.title }}</h2>
+            <p>{{ post.content }}</p>
+            <div class="comments">
+                {% for comment in post.comments.all %}
+                <div class="comment">
+                    <p>{{ comment.text }}</p>
+                </div>
+                {% empty %}
+                <p>No comments yet.</p>
+                {% endfor %}
+            </div>
+            {% if user.is_authenticated %}
+            <form action="{% url 'add-comment' post.id %}" method="post">
+                {% csrf_token %}
+                <textarea name="text" rows="3" placeholder="Add a comment..."></textarea>
+                <button type="submit">Add Comment</button>
+            </form>
+            {% else %}
+            <p><a href="{% url 'login' %}">Login</a> to add a comment.</p>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
-    <div style="width: 30%;">
-        {% if user_logged_in %}
-        <p>Welcome, {{ request.user.username }}!</p>
-        <form action="{% url 'logout' %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Logout</button>
-        </form>
-        {% else %}
-        <a href="{% url 'login' %}">Login</a>
-        <br>
-        <a href="{% url 'signup' %}">Signup</a>
-        {% endif %}
-    </div>
 </div>
-</body>
-</html>
+{% endblock %}

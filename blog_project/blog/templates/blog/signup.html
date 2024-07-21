@@ -1,18 +1,17 @@
-<!-- blog/templates/blog/signup.html -->
+{# blog/templates/blog/signup.html #}
+{% extends "blog/base.html" %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Signup</title>
-</head>
-<body>
+{% block sidebar %}
+<div class="login-signup">
+    <a href="{% url 'login' %}">Login</a>
+</div>
+{% endblock %}
+
+{% block content %}
 <h1>Signup</h1>
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}  <!-- This should render all fields including email, first name, and last name -->
+    {{ form.as_p }}
     <button type="submit">Signup</button>
 </form>
-<br>
-<a href="{% url 'login' %}">Login</a>
-</body>
-</html>
+{% endblock %}

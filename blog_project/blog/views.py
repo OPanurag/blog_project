@@ -1,37 +1,63 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404
-
+from django.contrib.auth.forms import AuthenticationForm
+from django.shortcuts import get_object_or_404, render, redirect
+from django.http import HttpResponse
+from django.template.loader import get_template
+from django.template import TemplateDoesNotExist
 from rest_framework.decorators import api_view
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from .forms import CustomUserCreationForm, PostForm
 from .models import Post, Comment
-from .forms import PostForm, CommentForm
-from .forms import CustomUserCreationForm
+
+
+def home(request):
+    try:
+        template = get_template('blog/home.html')
+    except TemplateDoesNotExist:
+        return HttpResponse("Template blog/home.html does not exist")
+
+    posts = Post.objects.all()
+    return render(request, 'blog/home.html', context={'posts': posts})
+
+
+@login_required
+def create_post(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user  # Set the author field
+            post.save()
+            return redirect('home')
+    else:
+        form = PostForm()
+
+    return render(request, 'blog/create_post.html', {'form': form, 'form_title': 'Add New Post', 'button_text': 'Add Post'})
+
+
+@login_required
+def add_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.method == 'POST':
+        text = request.POST.get('text')
+        if text:
+            Comment.objects.create(post=post, author=request.user, text=text)
+        return redirect('home')
+    return HttpResponse("Invalid request")
 
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    comments = Comment.objects.filter(post=post)  # Ensure Comment is used here
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.post = post
-            comment.author = request.user
-            comment.save()
-            return redirect('post-detail', pk=pk)
-    else:
-        form = CommentForm()
-    return render(request, 'blog/post_detail.html', {
+    comments = Comment.objects.filter(post=post).order_by('-created_at')
+
+    context = {
         'post': post,
         'comments': comments,
-        'form': form,
-    })
+    }
+    return render(request, 'blog/post_detail.html', context)
 
 
 def signup_view(request):
@@ -44,36 +70,21 @@ def signup_view(request):
         form = CustomUserCreationForm()
     return render(request, 'blog/signup.html', {'form': form})
 
-@login_required
-def add_comment(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.post = post
-            comment.author = request.user
-            comment.save()
-            return redirect('post-detail', pk=post_id)
-
-    return redirect('post-detail', pk=post_id)
-
 
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
-            auth_login(request, user)
-            return redirect('home')  # Redirect to a page after login
+            auth_login(request, user)  # Use auth_login to avoid conflict
+            return redirect('home')
     else:
         form = AuthenticationForm()
     return render(request, 'blog/login.html', {'form': form})
 
 
 @api_view(['POST'])
-def login(request):
+def api_login(request):
     username = request.data.get('username')
     password = request.data.get('password')
     user = authenticate(username=username, password=password)
@@ -86,44 +97,14 @@ def login(request):
     return Response({'error': 'Invalid credentials'}, status=400)
 
 
-# @login_required
-# def home(request):
-#     user = request.user
-#     posts = Post.objects.all()
-#     form = PostForm()  # Add this line to pass the form to the template
-#     return render(request, 'blog/home.html', {'user': user, 'posts': posts, 'form': form})
-
-def home(request):
+def post_list_view(request):
     posts = Post.objects.all()
-    user_logged_in = request.user.is_authenticated
-    return render(request, 'blog/home.html', {
-        'posts': posts,
-        'user_logged_in': user_logged_in,
-    })
+    return render(request, 'blog/post_list.html', {'posts': posts})
 
 
 def logout_view(request):
     auth_logout(request)
     return redirect('home')
-
-@login_required
-def create_post(request):
-    if request.method == 'POST':
-        form = PostForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user  # Set the author field
-            post.save()
-            return redirect('post-list')  # Redirect to post list after saving
-    else:
-        form = PostForm()
-
-    context = {
-        'form': form,
-        'form_title': 'Add New Post',
-        'button_text': 'Add Post'
-    }
-    return render(request, 'blog/post_form.html', context)
 
 
 @login_required
@@ -136,18 +117,4 @@ def edit_post(request, pk):
             return redirect('post-detail', pk=pk)
     else:
         form = PostForm(instance=post)
-    return render(request, 'blog/post_form.html', {'form': form, 'post': post})
-
-
-def post_list_view(request):
-    posts = Post.objects.all()
-    return render(request, 'blog/post_list.html', {'posts': posts})
-
-
-
-
-
-
-
-
-
+    return render(request, 'blog/create_post.html', {'form': form, 'post': post})
