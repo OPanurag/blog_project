@@ -1,35 +1,67 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-
 from .models import Post, Comment
+
+class SignUpForm(UserCreationForm):
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'placeholder': 'Email'}),
+        label='Email'
+    )
+    first_name = forms.CharField(
+        widget=forms.TextInput(attrs={'placeholder': 'First Name'}),
+        label='First Name'
+    )
+    last_name = forms.CharField(
+        widget=forms.TextInput(attrs={'placeholder': 'Last Name'}),
+        label='Last Name'
+    )
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2')
+        widgets = {
+            'username': forms.TextInput(attrs={'placeholder': 'Username'}),
+        }
+        error_messages = {
+            'username': {
+                'required': 'Username is required.',
+                'max_length': 'Username cannot exceed 150 characters.',
+                'invalid': 'Username can only contain letters, digits, and @/./+/-/_.',
+            },
+            'email': {
+                'required': 'Email is required.',
+                'invalid': 'Enter a valid email address.',
+            },
+            'password1': {
+                'required': 'Password is required.',
+            },
+            'password2': {
+                'required': 'Please confirm your password.',
+                'invalid': 'Passwords do not match.',
+            }
+        }
 
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title', 'content']  # Exclude 'author' field
 
-
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['text']
 
-
 class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField(required=True)
-    first_name = forms.CharField(max_length=30, required=True)
-    last_name = forms.CharField(max_length=30, required=True)
+    password1 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'placeholder': 'Password'}),
+        label='Password'
+    )
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'placeholder': 'Confirm Password'}),
+        label='Confirm Password'
+    )
 
     class Meta:
         model = User
         fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2')
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.email = self.cleaned_data['email']
-        user.first_name = self.cleaned_data['first_name']
-        user.last_name = self.cleaned_data['last_name']
-        if commit:
-            user.save()
-        return user

@@ -10,8 +10,8 @@
             <a href="{% url 'create-post' %}">Create Post</a>
         </div>
         <div class="user-details">
-            <h3>Welcome, {{ user.first_name }} {{ user.last_name }}</h3>
-            <a href="{% url 'logout' %}" class="logout-button">Logout</a>
+            <h3>Welcome, <br> {{ user.first_name }} {{ user.last_name }}</h3>
+            <a href="{% url 'logout' %}" class="auth-button">Logout</a>
         </div>
         {% else %}
         <div class="login-signup">
@@ -24,12 +24,24 @@
         <h1>All Posts</h1>
         {% for post in posts %}
         <div class="post">
+            <p class="post-meta">
+                By : {{ post.author.username }}
+                <br>
+                {{ post.created_at|date:"F j, Y" }}
+
+
+            </p>
+
             <h2>{{ post.title }}</h2>
             <p>{{ post.content }}</p>
             <div class="comments">
                 {% for comment in post.comments.all %}
                 <div class="comment">
-                    <p>{{ comment.text }}</p>
+
+                    <p class="comment-meta">
+                        {{ comment.author.username }}:  {{ comment.text }}
+                    </p>
+<!--                    <p>{{ comment.created_at|date:"F j, Y" }}</p>-->
                 </div>
                 {% empty %}
                 <p>No comments yet.</p>
@@ -39,7 +51,7 @@
             <form action="{% url 'add-comment' post.id %}" method="post">
                 {% csrf_token %}
                 <textarea name="text" rows="3" placeholder="Add a comment..."></textarea>
-                <button type="submit">Add Comment</button>
+                <button type="submit" class="auth-button">Add Comment</button>
             </form>
             {% else %}
             <p><a href="{% url 'login' %}">Login</a> to add a comment.</p>

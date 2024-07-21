@@ -1,17 +1,14 @@
-{# blog/templates/blog/signup.html #}
 {% extends "blog/base.html" %}
 
-{% block sidebar %}
-<div class="login-signup">
-    <a href="{% url 'login' %}">Login</a>
-</div>
-{% endblock %}
+{% block title %}Signup{% endblock %}
 
 {% block content %}
-<h1>Signup</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Signup</button>
-</form>
+<div class="auth-container">
+    <h1>Signup</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="auth-button">Signup</button>
+    </form>
+</div>
 {% endblock %}
