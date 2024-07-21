@@ -17,12 +17,16 @@ import os
 
 import dj_database_url
 
-DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
-}
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Database configuration
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",  # Database engine
+        "NAME": BASE_DIR / "db.sqlite3",  # Database file
+    }
+}
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-6ub(j)q*cw(wp*sj9f52w6&je7!1q@&o1_5p#i3*n6&s_p&2x#"
@@ -31,7 +35,8 @@ SECRET_KEY = "django-insecure-6ub(j)q*cw(wp*sj9f52w6&je7!1q@&o1_5p#i3*n6&s_p&2x#
 DEBUG = True
 
 # Allowed hosts for the application
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['blogproject-rrfr.onrender.com', '127.0.0.1', 'localhost']
+
 
 # Application definition
 INSTALLED_APPS = [
@@ -135,14 +140,6 @@ TEMPLATES = [
 
 # WSGI application
 WSGI_APPLICATION = "blog_project.blog_project.wsgi.application"
-
-# Database configuration
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",  # Database engine
-        "NAME": BASE_DIR / "db.sqlite3",  # Database file
-    }
-}
 
 # Password validation settings
 AUTH_PASSWORD_VALIDATORS = [
