@@ -1,6 +1,6 @@
-dj_database_url==2.2.0
-Django==5.0.7
-gunicorn==22.0.0
+Django>=3.0,<4.0
 djangorestframework
+djangorestframework-simplejwt
+gunicorn
 djangorestframework-jwt==1.11.0
 PyJWT==1.7.1
