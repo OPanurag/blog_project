@@ -48,7 +48,10 @@ def signup_view(request):
             else:
                 user = User.objects.create_user(username=username, email=email, password=password, first_name=first_name, last_name=last_name)
                 user.save()
-                login(request, user)
+
+                # Retrieve the backend and login the user
+                backend = 'django.contrib.auth.backends.ModelBackend'
+                login(request, user, backend=backend)
                 return redirect('home')
         else:
             messages.error(request, 'Passwords do not match.')
