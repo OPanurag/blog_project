@@ -17,7 +17,12 @@ SECRET_KEY = 'django-insecure-6ub(j)q*cw(wp*sj9f52w6&je7!1q@&o1_5p#i3*n6&s_p&2x#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'blogproject-rrfr.onrender.com',  # Add your Render app's domain
+    'localhost',
+    '127.0.0.1',
+    # Add other allowed hosts if needed
+]
 
 # Application definition
 INSTALLED_APPS = [
