@@ -88,7 +88,7 @@ def api_login(request):
 
 @login_required
 def edit_post(request, post_id):
-    post = get_object_or_404(Post, post_id=post_id)
+    post = get_object_or_404(Post, id=post_id)
     if request.method == 'POST':
         form = PostForm(request.POST, instance=post)
         if form.is_valid():
@@ -186,6 +186,6 @@ def logout_view(request):
 
 
 def post_detail(request, post_id):
-    post = get_object_or_404(Post, post_id=post_id)
+    post = get_object_or_404(Post, id=post_id)
     comments = Comment.objects.filter(post=post).order_by('-created_at')
     return render(request, 'blog/post_detail.html', {'post': post, 'comments': comments})
