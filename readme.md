@@ -11,34 +11,34 @@
 ### Installation
 
     1. Clone the repository:
-        Terminal....
+        
             git clone https://github.com/OPanurag/blog_project.git
             cd blog_project
 
 
     2. Create and activate a virtual environment:
-        Terminal....
+        
             python -m venv venv
             source venv/bin/activate  # On Windows use `venv\Scripts\activate`
 
 
     3. Install the dependencies:
-        Terminal....
+        
             pip install -r requirements.txt
 
 
     4. Apply the migrations:
-        Terminal....
+        
             python manage.py migrate
 
 
     5. Create a superuser:
-        Terminal....
+        
             python manage.py createsuperuser
 
 
     6. Run the development server:
-        Terminal....
+        
             python manage.py runserver
 
 
