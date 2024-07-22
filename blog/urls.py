@@ -17,8 +17,10 @@ urlpatterns = [
     path('create_post/', create_post, name='create_post'),
     path('posts/', post_list_view, name='post-list'),
     path('posts/<int:pk>/edit/', edit_post, name='edit-post'),
-    path('posts/<int:pk>/update/', update_post, name='update_post'),
-    path('posts/<int:pk>/delete/', delete_post, name='delete_post'),
+
+
+    path('posts/<int:post_id>/update/', update_post, name='update_post'),
+    path('posts/<int:post_id>/delete/', delete_post, name='delete_post'),
 
 
     path('posts/<int:pk>/', post_detail, name='post-detail'),

@@ -1,11 +1,12 @@
+from django.contrib.auth import authenticate
+from rest_framework import generics
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from blog.models import Post, Comment
-from rest_framework import generics
 from .serializers import PostSerializer, CommentSerializer
+
 
 @api_view(['POST'])
 def api_login(request):
@@ -20,13 +21,16 @@ def api_login(request):
         })
     return Response({'error': 'Invalid credentials'}, status=400)
 
+
 class PostListCreateView(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
+
 class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
 
 class CommentListCreateView(generics.ListCreateAPIView):
     serializer_class = CommentSerializer

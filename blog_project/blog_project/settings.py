@@ -5,10 +5,9 @@ For more information on this file, see
 https://docs.djangoproject.com/en/5.0/topics/settings/
 """
 
-import os
 from pathlib import Path
-from django.contrib.messages import constants as messages
 
+from django.contrib.messages import constants as messages
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'debug',
