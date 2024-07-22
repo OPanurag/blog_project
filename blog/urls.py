@@ -18,11 +18,11 @@ urlpatterns = [
     path('posts/', post_list_view, name='post-list'),
     path('posts/<int:pk>/edit/', edit_post, name='edit-post'),
 
-    # Up
+    # Update and Delete Post
     path('posts/<int:post_id>/update/', update_post, name='update_post'),
     path('posts/<int:post_id>/delete/', delete_post, name='delete_post'),
 
-
+    # Post Detail
     path('posts/<int:post_id>/', post_detail, name='post-detail'),
 
     # Comments
