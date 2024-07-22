@@ -1,14 +1,12 @@
-####Test Documentation
-
-###Overview
+Overview
 
     This document provides an overview of the test cases implemented for the Django blog project. 
     The tests cover model validations, view logic, and API endpoints to ensure the application 
     behaves as expected.
 
-###Tests Included
+Tests Included
 
-    ##PostUpdateDeleteTest
+    PostUpdateDeleteTest
     
         This test case verifies the functionality of updating and deleting posts, 
         as well as ensuring users cannot modify or delete posts they do not own.
@@ -42,7 +40,7 @@
             Checks the response status code and ensures the post 
             is not deleted.
     
-    ##PostModelTest
+    PostModelTest
     
         This test case ensures the Post model works as expected.
     
@@ -63,7 +61,7 @@
             Verifies the get_absolute_url method returns the 
             correct URL for the post.
     
-    ##CommentModelTest
+    CommentModelTest
     
         This test case ensures the Comment model works as expected.
     
@@ -79,7 +77,7 @@
     
             Checks the string representation of the comment.
     
-    ##PostAPITest
+    PostAPITest
     
         This test case verifies the API endpoints for managing posts.
     
@@ -123,7 +121,7 @@
     
     This will execute all the test cases and provide a summary of the results.
 
-###Conclusion
+Conclusion
 
     The test cases provided cover a range of scenarios to ensure the 
     integrity and reliability of the Django blog project. 
