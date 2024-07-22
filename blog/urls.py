@@ -1,9 +1,7 @@
 from django.urls import path
 from .views import (
-    home, login_view, signup_view, post_list_view, post_detail, create_post, edit_post,
-    add_comment, logout_view, update_post, delete_post
+    home, login_view, signup_view, post_list_view, post_detail, create_post, edit_post, add_comment, logout_view, update_post, delete_post
 )
-
 from .api.views import PostListCreateView, PostRetrieveUpdateDestroyView, CommentListCreateView, api_login
 
 urlpatterns = [
@@ -16,7 +14,7 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
 
     # Post Management
-    path('create/', create_post, name='create-post'),
+    path('create_post/', create_post, name='create_post'),
     path('posts/', post_list_view, name='post-list'),
     path('posts/<int:pk>/', post_detail, name='post-detail'),
     path('posts/<int:pk>/edit/', edit_post, name='edit-post'),
