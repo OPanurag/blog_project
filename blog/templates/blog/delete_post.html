@@ -24,12 +24,12 @@
         {% endfor %}
     </div>
     {% if user.is_authenticated %}
-    <a href="{% url 'update-post' post.id %}" class="auth-button">Update Post</a>
-    <form action="{% url 'delete-post' post.id %}" method="post" style="display: inline;">
+    <a href="{% url 'update_post' post.id %}" class="auth-button">Update Post</a>
+    <form action="{% url 'delete_post' post.id %}" method="post" style="display: inline;">
         {% csrf_token %}
         <button type="submit" class="auth-button" style="background-color: #dc3545;">Delete Post</button>
     </form>
-    <form action="{% url 'add-comment' post.id %}" method="post">
+    <form action="{% url 'add_comment' post.id %}" method="post">
         {% csrf_token %}
         <textarea name="text" rows="3" placeholder="Add a comment..." class="form-control"></textarea>
         <button type="submit">Add Comment</button>
