@@ -18,7 +18,7 @@ urlpatterns = [
     path('posts/', post_list_view, name='post-list'),
     path('posts/<int:pk>/', post_detail, name='post-detail'),
     path('posts/<int:pk>/edit/', edit_post, name='edit-post'),
-    path('posts/<int:pk>/update/', update_post, name='update-post'),
+    path('posts/<int:pk>/update/', update_post, name='update_post'),
     path('posts/<int:pk>/delete/', delete_post, name='delete-post'),
 
     # Comments
