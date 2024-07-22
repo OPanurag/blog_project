@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Post, Comment
 
+
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(
         widget=forms.EmailInput(attrs={'placeholder': 'Email'}),
@@ -42,10 +43,12 @@ class SignUpForm(UserCreationForm):
             }
         }
 
+
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title', 'content']
+
 
 class CommentForm(forms.ModelForm):
     class Meta:
