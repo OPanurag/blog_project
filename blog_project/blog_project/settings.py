@@ -7,6 +7,8 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 
 from pathlib import Path
 
+import os
+
 from django.contrib.messages import constants as messages
 
 MESSAGE_TAGS = {
@@ -59,7 +61,7 @@ ROOT_URLCONF = 'blog_project.blog_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Adjust if needed
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

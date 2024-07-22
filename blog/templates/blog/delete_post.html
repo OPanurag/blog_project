@@ -1,42 +1,17 @@
-{% extends 'base.html' %}
+{% extends 'blog/base.html' %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Delete Post{% endblock %}
 
 {% block content %}
-<h1>All Posts</h1>
-{% for post in posts %}
-<div class="post">
-    <p class="post-meta">
-        By: {{ post.author.username }}<br>
-        {{ post.created_at|date:"F j, Y" }}
-    </p>
-    <h2>{{ post.title }}</h2>
-    <p>{{ post.content }}</p>
-    <div class="comments">
-        {% for comment in post.comments.all %}
-        <div class="comment">
-            <p class="comment-meta">
-                {{ comment.author.username }}: {{ comment.text }}
-            </p>
-        </div>
-        {% empty %}
-        <p>No comments yet.</p>
-        {% endfor %}
+<div class="container">
+    <div class="right-content">
+        <h1>Delete Post</h1>
+        <form method="post" action="{% url 'delete_post' post_id=post.id %}">
+            {% csrf_token %}
+            <p>Are you sure you want to delete the post titled "{{ post.title }}"?</p>
+            <button type="submit" class="auth-button">Delete</button>
+            <a href="{% url 'post-detail' post_id=post.id %}" class="btn btn-secondary">Cancel</a>
+        </form>
     </div>
-    {% if user.is_authenticated %}
-    <a href="{% url 'update_post' post.id %}" class="auth-button">Update Post</a>
-    <form action="{% url 'delete_post' post.id %}" method="post" style="display: inline;">
-        {% csrf_token %}
-        <button type="submit" class="auth-button" style="background-color: #dc3545;">Delete Post</button>
-    </form>
-    <form action="{% url 'add_comment' post.id %}" method="post">
-        {% csrf_token %}
-        <textarea name="text" rows="3" placeholder="Add a comment..." class="form-control"></textarea>
-        <button type="submit">Add Comment</button>
-    </form>
-    {% else %}
-    <p><a href="{% url 'login' %}" class="auth-button">Login</a> to add a comment.</p>
-    {% endif %}
 </div>
-{% endfor %}
 {% endblock %}
