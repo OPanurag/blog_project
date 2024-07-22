@@ -21,7 +21,7 @@
             </ul>
             <!-- Comment form -->
             {% if user.is_authenticated %}
-            <form action="{% url 'add-comment' post.pk %}" method="post" class="comment-form">
+            <form action="{% url 'add_comment' post.id %}" method="post" class="comment-form">
                 {% csrf_token %}
                 <textarea name="text" placeholder="Add a comment" rows="3" required></textarea>
                 <button type="submit">Submit</button>
