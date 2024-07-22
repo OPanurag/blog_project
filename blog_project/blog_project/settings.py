@@ -28,10 +28,9 @@ SECRET_KEY = 'django-insecure-6ub(j)q*cw(wp*sj9f52w6&je7!1q@&o1_5p#i3*n6&s_p&2x#
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'blogproject-rrfr.onrender.com',  # Add your Render app's domain
+    'blogproject-rrfr.onrender.com',  # Render app's domain
     'localhost',
     '127.0.0.1',
-    # Add other allowed hosts if needed
 ]
 
 # Application definition
@@ -42,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blog',  # Your blog app
+    'blog',  # App Name
     'rest_framework',  # If using Django REST Framework
 ]
 
@@ -61,7 +60,7 @@ ROOT_URLCONF = 'blog_project.blog_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

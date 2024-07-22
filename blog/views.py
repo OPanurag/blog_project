@@ -143,6 +143,7 @@ def post_detail(request, pk):
     return render(request, 'blog/post_detail.html', {'post': post, 'comments': comments})
 
 
+
 @api_view(['POST'])
 def api_login(request):
     username = request.data.get('username')
@@ -165,6 +166,7 @@ def post_list_view(request):
 def logout_view(request):
     auth_logout(request)
     return redirect('home')
+
 
 
 @login_required
