@@ -36,6 +36,59 @@ def delete_post(request, post_id):
     return render(request, 'blog/delete_post.html', {'post': post})
 
 
+@login_required
+def create_post(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            return redirect('home')
+    else:
+        form = PostForm()
+
+    return render(request, 'blog/create_post.html', {'form': form, 'form_title': 'Add New Post', 'button_text': 'Add Post'})
+
+
+@login_required
+def add_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.method == 'POST':
+        text = request.POST.get('text')
+        if text:
+            Comment.objects.create(post=post, author=request.user, text=text)
+        return redirect('post-detail', pk=post_id)
+    return HttpResponse("Invalid request")
+
+
+@api_view(['POST'])
+def api_login(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        })
+    return Response({'error': 'Invalid credentials'}, status=400)
+
+
+@login_required
+def edit_post(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == 'POST':
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('post-detail', pk=pk)
+    else:
+        form = PostForm(instance=post)
+    return render(request, 'blog/create_post.html', {'form': form, 'post': post})
+
+
 class SignUpForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, label='Password')
     confirm_password = forms.CharField(widget=forms.PasswordInput, label='Confirm Password')
@@ -112,52 +165,6 @@ def home(request):
     return render(request, 'blog/home.html', {'posts': posts})
 
 
-@login_required
-def create_post(request):
-    if request.method == 'POST':
-        form = PostForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.save()
-            return redirect('home')
-    else:
-        form = PostForm()
-
-    return render(request, 'blog/create_post.html', {'form': form, 'form_title': 'Add New Post', 'button_text': 'Add Post'})
-
-
-@login_required
-def add_comment(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    if request.method == 'POST':
-        text = request.POST.get('text')
-        if text:
-            Comment.objects.create(post=post, author=request.user, text=text)
-        return redirect('post-detail', pk=post_id)
-    return HttpResponse("Invalid request")
-
-
-def post_detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    comments = Comment.objects.filter(post=post).order_by('-created_at')
-    return render(request, 'blog/post_detail.html', {'post': post, 'comments': comments})
-
-
-@api_view(['POST'])
-def api_login(request):
-    username = request.data.get('username')
-    password = request.data.get('password')
-    user = authenticate(username=username, password=password)
-    if user is not None:
-        refresh = RefreshToken.for_user(user)
-        return Response({
-            'refresh': str(refresh),
-            'access': str(refresh.access_token),
-        })
-    return Response({'error': 'Invalid credentials'}, status=400)
-
-
 def post_list_view(request):
     posts = Post.objects.all()
     return render(request, 'blog/post_list.html', {'posts': posts})
@@ -168,14 +175,7 @@ def logout_view(request):
     return redirect('home')
 
 
-@login_required
-def edit_post(request, pk):
+def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    if request.method == 'POST':
-        form = PostForm(request.POST, instance=post)
-        if form.is_valid():
-            form.save()
-            return redirect('post-detail', pk=pk)
-    else:
-        form = PostForm(instance=post)
-    return render(request, 'blog/create_post.html', {'form': form, 'post': post})
+    comments = Comment.objects.filter(post=post).order_by('-created_at')
+    return render(request, 'blog/post_detail.html', {'post': post, 'comments': comments})
