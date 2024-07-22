@@ -21,10 +21,11 @@ def update_post(request, post_id):
         form = PostForm(request.POST, instance=post)
         if form.is_valid():
             form.save()
-            return redirect('post_detail', post_id=post.id)
+            return redirect('post-detail', post_id=post.id)
     else:
         form = PostForm(instance=post)
     return render(request, 'blog/update_post.html', {'form': form})
+
 
 @login_required
 def delete_post(request, post_id):
@@ -67,7 +68,8 @@ def signup_view(request):
             elif User.objects.filter(email=email).exists():
                 messages.error(request, 'Email already exists.')
             else:
-                user = User.objects.create_user(username=username, email=email, password=password, first_name=first_name, last_name=last_name)
+                user = User.objects.create_user(username=username, email=email, password=password,
+                                                first_name=first_name, last_name=last_name)
                 user.save()
 
                 # Retrieve the backend and login the user
@@ -103,7 +105,6 @@ def login_view(request):
         print("GET request received")  # Debugging line
         form = AuthenticationForm()
     return render(request, 'blog/login.html', {'form': form})
-
 
 
 def home(request):
@@ -143,7 +144,6 @@ def post_detail(request, pk):
     return render(request, 'blog/post_detail.html', {'post': post, 'comments': comments})
 
 
-
 @api_view(['POST'])
 def api_login(request):
     username = request.data.get('username')
@@ -166,7 +166,6 @@ def post_list_view(request):
 def logout_view(request):
     auth_logout(request)
     return redirect('home')
-
 
 
 @login_required
