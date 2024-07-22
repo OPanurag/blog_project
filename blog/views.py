@@ -27,19 +27,10 @@ def update_post(request, post_id):
         form = PostForm(request.POST, instance=post)
         if form.is_valid():
             form.save()
-            return redirect('post-detail', pk=post_id)
+            return redirect('post-detail', post_id=post_id)
     else:
         form = PostForm(instance=post)
     return render(request, 'blog/update_post.html', {'form': form, 'post': post})
-
-
-# @login_required
-# def delete_post(request, post_id):
-#     post = get_object_or_404(Post, id=post_id, author=request.user)
-#     if request.method == 'POST':
-#         post.delete()
-#         return redirect('home')
-#     return render(request, 'blog/delete_post.html', {'post': post})
 
 
 @login_required()
@@ -77,7 +68,7 @@ def add_comment(request, post_id):
         text = request.POST.get('text')
         if text:
             Comment.objects.create(post=post, author=request.user, text=text)
-        return redirect('post-detail', pk=post_id)
+        return redirect('post-detail', post_id=post_id)
     return HttpResponse("Invalid request")
 
 
@@ -96,13 +87,13 @@ def api_login(request):
 
 
 @login_required
-def edit_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+def edit_post(request, post_id):
+    post = get_object_or_404(Post, post_id=post_id)
     if request.method == 'POST':
         form = PostForm(request.POST, instance=post)
         if form.is_valid():
             form.save()
-            return redirect('post-detail', pk=pk)
+            return redirect('post-detail', post_id=post_id)
     else:
         form = PostForm(instance=post)
     return render(request, 'blog/create_post.html', {'form': form, 'post': post})
@@ -194,7 +185,7 @@ def logout_view(request):
     return redirect('home')
 
 
-def post_detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+def post_detail(request, post_id):
+    post = get_object_or_404(Post, post_id=post_id)
     comments = Comment.objects.filter(post=post).order_by('-created_at')
     return render(request, 'blog/post_detail.html', {'post': post, 'comments': comments})
