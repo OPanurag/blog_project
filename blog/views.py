@@ -14,6 +14,27 @@ from .forms import PostForm, SignUpForm
 from .models import Post, Comment
 
 
+@login_required
+def update_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id, author=request.user)
+    if request.method == 'POST':
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('post_detail', post_id=post.id)
+    else:
+        form = PostForm(instance=post)
+    return render(request, 'blog/update_post.html', {'form': form})
+
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id, author=request.user)
+    if request.method == 'POST':
+        post.delete()
+        return redirect('home')
+    return render(request, 'blog/delete_post.html', {'post': post})
+
+
 class SignUpForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, label='Password')
     confirm_password = forms.CharField(widget=forms.PasswordInput, label='Confirm Password')

@@ -4,6 +4,48 @@ from django.contrib.auth.models import User
 from .models import Post, Comment
 
 
+class PostUpdateDeleteTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.other_user = User.objects.create_user(username='otheruser', password='otherpass')
+        self.post = Post.objects.create(title='Test Post', content='Test Content', author=self.user)
+        self.client.login(username='testuser', password='testpass')
+
+    def test_update_post(self):
+        response = self.client.post(reverse('update_post', args=[self.post.id]), {
+            'title': 'Updated Title',
+            'content': 'Updated Content',
+        })
+        self.post.refresh_from_db()
+        self.assertEqual(self.post.title, 'Updated Title')
+        self.assertEqual(self.post.content, 'Updated Content')
+        self.assertRedirects(response, reverse('post_detail', args=[self.post.id]))
+
+    def test_delete_post(self):
+        response = self.client.post(reverse('delete_post', args=[self.post.id]))
+        self.assertFalse(Post.objects.filter(id=self.post.id).exists())
+        self.assertRedirects(response, reverse('home'))
+
+    def test_cannot_update_other_users_post(self):
+        self.client.logout()
+        self.client.login(username='otheruser', password='otherpass')
+        response = self.client.post(reverse('update_post', args=[self.post.id]), {
+            'title': 'Malicious Update',
+            'content': 'Malicious Content',
+        })
+        self.post.refresh_from_db()
+        self.assertNotEqual(self.post.title, 'Malicious Update')
+        self.assertNotEqual(self.post.content, 'Malicious Content')
+        self.assertEqual(response.status_code, 404)
+
+    def test_cannot_delete_other_users_post(self):
+        self.client.logout()
+        self.client.login(username='otheruser', password='otherpass')
+        response = self.client.post(reverse('delete_post', args=[self.post.id]))
+        self.assertTrue(Post.objects.filter(id=self.post.id).exists())
+        self.assertEqual(response.status_code, 404)
+
+
 class PostModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):

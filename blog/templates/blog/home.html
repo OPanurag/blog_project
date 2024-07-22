@@ -1,4 +1,4 @@
-{% extends 'blog/base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}Home{% endblock %}
 
@@ -43,6 +43,10 @@
                 {% endfor %}
             </div>
             {% if user.is_authenticated %}
+            {% if user == post.author %}
+            <a href="{% url 'update_post' post.id %}" class="auth-button">Update</a>
+            <a href="{% url 'delete_post' post.id %}" class="auth-button">Delete</a>
+            {% endif %}
             <form action="{% url 'add-comment' post.id %}" method="post">
                 {% csrf_token %}
                 <textarea name="text" rows="3" placeholder="Add a comment..." class="form-control"></textarea>
