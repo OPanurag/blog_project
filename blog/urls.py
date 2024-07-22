@@ -23,7 +23,7 @@ urlpatterns = [
     path('posts/<int:post_id>/delete/', delete_post, name='delete_post'),
 
 
-    path('posts/<int:pk>/', post_detail, name='post-detail'),
+    path('posts/<int:post_id>/', post_detail, name='post-detail'),
 
     # Comments
     path('posts/<int:post_id>/add_comment/', add_comment, name='add_comment'),
