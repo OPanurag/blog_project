@@ -1,19 +1,14 @@
 from django import forms
-
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
-
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.template import TemplateDoesNotExist
-
 from rest_framework.decorators import api_view
-
 from rest_framework.response import Response
-
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .forms import PostForm
