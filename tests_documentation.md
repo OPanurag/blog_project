@@ -117,7 +117,7 @@ Tests Included
         8. Running the Tests
     
             To run the tests, use the following command:
-            python manage.py test
+                "python manage.py test"
     
     This will execute all the test cases and provide a summary of the results.
 
