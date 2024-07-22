@@ -27,7 +27,7 @@ def update_post(request, post_id):
         form = PostForm(request.POST, instance=post)
         if form.is_valid():
             form.save()
-            return redirect('post-detail', post_id=post_id)
+            return redirect('home', post_id=post_id)
     else:
         form = PostForm(instance=post)
     return render(request, 'blog/update_post.html', {'form': form, 'post': post})
