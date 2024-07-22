@@ -21,10 +21,10 @@ def update_post(request, post_id):
         form = PostForm(request.POST, instance=post)
         if form.is_valid():
             form.save()
-            return redirect('post-detail', post_id=post.id)
+            return redirect('post-detail', pk=post_id)
     else:
         form = PostForm(instance=post)
-    return render(request, 'blog/update_post.html', {'form': form})
+    return render(request, 'blog/update_post.html', {'form': form, 'post': post})
 
 
 @login_required
