@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.urls import reverse
 from django.contrib.auth.models import User
 from .models import Post, Comment
 
@@ -45,3 +46,48 @@ class CommentModelTest(TestCase):
         comment = Comment.objects.get(id=1)
         expected_str = f'{comment.author.username} - {comment.text}'
         self.assertEqual(str(comment), expected_str)
+
+
+class PostAPITest(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(username='testuser', password='testpass')
+        cls.post = Post.objects.create(title='Test Post', content='Test Content', author=cls.user)
+
+    def setUp(self):
+        self.client.login(username='testuser', password='testpass')
+
+    def test_get_posts(self):
+        response = self.client.get(reverse('post_list'))  # Ensure you have the correct URL name
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Test Post')
+
+    def test_get_single_post(self):
+        response = self.client.get(reverse('post_detail', kwargs={'pk': self.post.pk}))  # Ensure you have the correct URL name
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Test Post')
+
+    def test_create_post(self):
+        response = self.client.post(reverse('post_list'), {
+            'title': 'New Post',
+            'content': 'This is a new post',
+            'author': self.user.id
+        })
+        self.assertEqual(response.status_code, 201)
+        self.assertContains(response, 'New Post')
+
+    def test_update_post(self):
+        response = self.client.put(reverse('post_detail', kwargs={'pk': self.post.pk}), {
+            'title': 'Updated Post',
+            'content': 'This is the updated content',
+            'author': self.user.id
+        }, content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.post.refresh_from_db()
+        self.assertEqual(self.post.title, 'Updated Post')
+
+    def test_delete_post(self):
+        response = self.client.delete(reverse('post_detail', kwargs={'pk': self.post.pk}))
+        self.assertEqual(response.status_code, 204)
+        self.assertFalse(Post.objects.filter(pk=self.post.pk).exists())
