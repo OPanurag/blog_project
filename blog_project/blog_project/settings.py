@@ -56,9 +56,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# ROOT_URLCONF = 'blog_project.blog_project.urls'
-ROOT_URLCONF = 'blog_project.urls'
-
+ROOT_URLCONF = 'blog_project.blog_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -76,8 +74,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'blog_project.wsgi.application'
-ASGI_APPLICATION = 'blog_project.asgi.application'
+WSGI_APPLICATION = 'blog_project.blog_project.wsgi.application'
+ASGI_APPLICATION = 'blog_project.blog_project.asgi.application'
 
 
 # Database
@@ -134,9 +132,3 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Additional settings
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
-
-import sys
-import os
-
-print("Current Working Directory:", os.getcwd())
-print("Python Path:", sys.path)
